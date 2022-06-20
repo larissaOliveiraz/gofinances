@@ -14,12 +14,12 @@ import {
 
 import theme from "./src/global/styles/theme";
 
-import { Register } from "./src/screens/Register";
-import { CategorySelect } from "./src/screens/CategorySelect";
-import { Dashboard } from "./src/screens/Dashboard";
 import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "react-native";
+
 import { AppRoutes } from "./src/routes/app.routes";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SignIn } from "./src/screens/SignIn";
+import { AuthProvider } from "./src/hooks/auth";
 
 export default function App() {
   SplashScreen.preventAutoHideAsync();
@@ -39,7 +39,15 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <NavigationContainer>
-        <AppRoutes />
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
+
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   );

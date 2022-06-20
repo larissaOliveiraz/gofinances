@@ -66,19 +66,20 @@ export function Register() {
   });
 
   /* ************************************************************************* */
-
+  // SELECIONA O TIPO DE TRANSAÇÃO
   function handleTransactionTypeSelect(type: "positive" | "negative") {
     setTransactionType(type);
   }
 
+  // ABRE E FECHA A "SCREEN" DE SELECIONAR A CATEGORIA
   function handleOpenSelectCategory() {
     setCategoryModalOpen(true);
   }
-
   function handleCloseSelectCategory() {
     setCategoryModalOpen(false);
   }
 
+  // FAZ O REGISTRO DE UMA NOVA TRANSAÇÃO
   async function handleRegister(form: Partial<FormData>) {
     if (!transactionType) return Alert.alert("Selecione o tipo da transação");
 
@@ -106,6 +107,7 @@ export function Register() {
 
       console.log(dataFormatted);
 
+      // deixa os inputs em branco outra vez e navega para a página de "Listagem"
       reset();
       setTransactionType("");
       setCategory({
@@ -113,6 +115,8 @@ export function Register() {
         name: "Categoria",
       });
       navigation.navigate("Listagem");
+
+      // pega e exibe possíveis erros
     } catch (error) {
       console.log(error);
       Alert.alert("Não foi possível cadastrar");

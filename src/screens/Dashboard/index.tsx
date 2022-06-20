@@ -51,6 +51,7 @@ export function Dashboard() {
 
   const theme = useTheme();
 
+  // PEGA A DATA DA ÚLTIMA TRANSAÇÃO
   function getLastTransactionDate(
     transactions: DataListProps[],
     type: "positive" | "negative"
@@ -62,11 +63,14 @@ export function Dashboard() {
         .map((transaction) => new Date(transaction.date).getTime())
     );
 
-    return `${new Date(lastTransaction).getDate()} de ${new Date(
-      lastTransaction
-    ).toLocaleString("pt-BR", { month: "long" })}`;
+    return lastTransaction > 0
+      ? `${new Date(lastTransaction).getDate()} de ${new Date(
+          lastTransaction
+        ).toLocaleString("pt-BR", { month: "long" })}`
+      : "";
   }
 
+  // FAZ O CARREGAMENTO DE TODAS AS TRANSACÕES
   async function loadTransactions() {
     const dataKey = "@gofinances:transactions";
     const response = await AsyncStorage.getItem(dataKey);
@@ -75,6 +79,7 @@ export function Dashboard() {
     let entriesTotal = 0;
     let expencesTotal = 0;
 
+    // formatação de "amount" e "date"
     const transactionsFormatted: DataListProps[] = transactions.map(
       (item: DataListProps) => {
         let amountFormat = Number(item.amount).toLocaleString("pt-Br", {
@@ -107,8 +112,10 @@ export function Dashboard() {
       }
     );
 
+    // exibe as transações
     setTransactions(transactionsFormatted);
 
+    // acha a data das últimas transações
     const lastTransactionEntry = getLastTransactionDate(
       transactions,
       "positive"
@@ -117,8 +124,12 @@ export function Dashboard() {
       transactions,
       "negative"
     );
-    const totalInterval = `01 à ${lastTransactionEntry}`;
+    const totalInterval =
+      lastTransactionEntry || lastTransactionExpence
+        ? `01 à ${lastTransactionEntry}`
+        : "";
 
+    // total de "entradas", "saídas" e "contaTotal" nos HignCards
     const totalSumCount = entriesTotal - expencesTotal;
     setHighData({
       entries: {
@@ -126,14 +137,18 @@ export function Dashboard() {
           style: "currency",
           currency: "BRL",
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionEntry}`,
+        lastTransaction: lastTransactionEntry
+          ? `Última entrada dia ${lastTransactionEntry}`
+          : "Você não tem entradas",
       },
       expences: {
         total: expencesTotal.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL",
         }),
-        lastTransaction: `Última saída dia ${lastTransactionExpence}`,
+        lastTransaction: lastTransactionExpence
+          ? `Última saída dia ${lastTransactionExpence}`
+          : "Você não tem saídas",
       },
       totalCount: {
         total: totalSumCount.toLocaleString("pt-BR", {
@@ -144,11 +159,21 @@ export function Dashboard() {
       },
     });
 
+    // exibe uma tela de "Loading" enquanto as transações ainda não carregaram
     setIsLoading(false);
   }
 
+  // CHAMA A FUNÇÃO QUE CARREGA AS TRANSAÇÕES
   useEffect(() => {
     loadTransactions();
+
+    // async function removeAllTransactions() {
+    //   const dataKey = "@gofinances:transactions";
+
+    //   AsyncStorage.removeItem(dataKey);
+    // }
+
+    // removeAllTransactions();
   }, []);
 
   useFocusEffect(
@@ -158,6 +183,7 @@ export function Dashboard() {
   );
 
   return (
+    // SE AS TRANSAÇÕES NÃO ESTIVEREM CARREGADAS, EXIBE UMA PÁGINA DE "CARREGANDO" COM O INDICADOR
     <Container>
       {isLoading ? (
         <LoadContainer>
