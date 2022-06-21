@@ -26,6 +26,7 @@ interface User {
 interface AuthContextData {
   user: User;
   signInWithGoogle(): Promise<void>;
+  signOut(): Promise<void>;
 }
 
 interface AuthorizationResponse {
@@ -92,6 +93,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signOut() {
+    setUser({} as User);
+    await AsyncStorage.removeItem("@gofinances:user");
+  }
+
   // VERIFICA SE O USUÁRIO JÁ ESTÁ LOGADO SEMPRE QUE O APP É RECARREGADO
   useEffect(() => {
     async function loadUserStorageData() {
@@ -110,7 +116,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     // value - valores que ficam disponíveis em toda a aplicação - "useAuth()"
-    <AuthContext.Provider value={{ user, signInWithGoogle }}>
+    <AuthContext.Provider value={{ user, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   );

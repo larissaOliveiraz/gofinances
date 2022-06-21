@@ -8,6 +8,7 @@ import {
   getBottomSpace,
 } from "react-native-iphone-x-helper";
 import { DataListProps } from ".";
+import { RectButton } from "react-native-gesture-handler";
 
 export const Container = styled.View`
   flex: 1;
@@ -62,7 +63,7 @@ export const UserName = styled.Text`
   line-height: 24px;
 `;
 
-export const LogoutButton = styled(TouchableOpacity)``;
+export const LogoutButton = styled(RectButton)``;
 
 export const Icon = styled(Feather)`
   color: ${({ theme }) => theme.colors.secondary};

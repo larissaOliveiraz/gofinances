@@ -28,6 +28,9 @@ import {
   LogoutButton,
   LoadContainer,
 } from "./styles";
+import { useAuth } from "../../hooks/auth";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SignOutButton } from "../../components/SignOutButton";
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -49,6 +52,7 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [highData, setHighData] = useState<HighData>({} as HighData);
 
+  const { signOut } = useAuth();
   const theme = useTheme();
 
   // PEGA A DATA DA ÚLTIMA TRANSAÇÃO
@@ -163,6 +167,10 @@ export function Dashboard() {
     setIsLoading(false);
   }
 
+  function handleSignOut() {
+    signOut();
+  }
+
   // CHAMA A FUNÇÃO QUE CARREGA AS TRANSAÇÕES
   useEffect(() => {
     loadTransactions();
@@ -205,9 +213,9 @@ export function Dashboard() {
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
-                <Icon name="power" />
-              </LogoutButton>
+              <GestureHandlerRootView>
+                <SignOutButton onPress={handleSignOut} />
+              </GestureHandlerRootView>
             </UserWrapper>
           </Header>
 
