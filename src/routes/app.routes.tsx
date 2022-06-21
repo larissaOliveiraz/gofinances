@@ -1,3 +1,5 @@
+// ROTAS PRIVADAS
+
 import React, { Platform } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
