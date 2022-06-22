@@ -55,7 +55,7 @@ export const Name = styled.Text`
 `;
 
 export const Separator = styled.View`
-  height: 0.5px;
+  height: 1.5px;
   width: 90%;
   align-self: center;
   background-color: ${({ theme }) => theme.colors.text};

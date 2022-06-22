@@ -30,6 +30,7 @@ import { ptBR } from "date-fns/locale";
 import { LoadContainer } from "../Dashboard/styles";
 import { ActivityIndicator } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAuth } from "../../hooks/auth";
 
 interface TotalByCategory {
   key: string;
@@ -41,6 +42,8 @@ interface TotalByCategory {
 }
 
 export function Resume() {
+  const { user } = useAuth();
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [historyData, setHistoryData] = useState<TotalByCategory[]>([]);
@@ -62,7 +65,7 @@ export function Resume() {
     setIsLoading(true);
 
     //pega todas as transações feitas
-    const dataKey = "@gofinances:transactions";
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
 

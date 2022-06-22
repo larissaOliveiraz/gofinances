@@ -8,7 +8,7 @@ interface CategoryProps {
 
 export function CategorySelectButton({ title, onPress }: CategoryProps) {
   return (
-    <Container onPress={onPress}>
+    <Container onPress={onPress} activeOpacity={0.8}>
       <Category>{title}</Category>
       <Icon name="chevron-down" />
     </Container>

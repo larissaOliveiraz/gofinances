@@ -9,7 +9,7 @@ import { ThemeProvider } from "styled-components";
 import * as SplashScreen from "expo-splash-screen";
 import theme from "./src/global/styles/theme";
 
-import { AuthProvider } from "./src/hooks/auth";
+import { AuthProvider, useAuth } from "./src/hooks/auth";
 
 import {
   useFonts,
@@ -18,6 +18,7 @@ import {
   Poppins_700Bold,
 } from "@expo-google-fonts/poppins";
 import { Routes } from "./src/routes";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
@@ -29,8 +30,9 @@ export default function App() {
     Poppins_500Medium,
     Poppins_700Bold,
   });
+  const { loadingUser } = useAuth();
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || loadingUser) {
     return null;
   }
 
@@ -44,9 +46,11 @@ export default function App() {
         translucent
       />
 
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider>
+      </GestureHandlerRootView>
     </ThemeProvider>
   );
 }

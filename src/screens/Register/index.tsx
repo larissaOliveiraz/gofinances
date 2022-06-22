@@ -23,6 +23,8 @@ import {
   ButtonContainer,
   TrandactionTypeContainer,
 } from "./styles";
+import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
+import { useAuth } from "../../hooks/auth";
 
 /////////////////////////////////////////////////
 
@@ -46,6 +48,8 @@ const schema = Yup.object().shape({
 ///////////////////////////////////////////////////
 
 export function Register() {
+  const { user } = useAuth();
+
   const [transactionType, setTransactionType] = useState("");
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
 
@@ -96,7 +100,7 @@ export function Register() {
     };
 
     try {
-      const dataKey = "@gofinances:transactions";
+      const dataKey = `@gofinances:transactions_user:${user.id}`;
 
       const data = await AsyncStorage.getItem(dataKey);
       const currentData = data ? JSON.parse(data) : [];
@@ -152,13 +156,13 @@ export function Register() {
           <TrandactionTypeContainer>
             <TransactionTypeButton
               type="up"
-              title="Income"
+              title="Entrada"
               onPress={() => handleTransactionTypeSelect("positive")}
               isActive={transactionType === "positive"}
             />
             <TransactionTypeButton
               type="down"
-              title="Outcome"
+              title="Saída"
               onPress={() => handleTransactionTypeSelect("negative")}
               isActive={transactionType === "negative"}
             />
@@ -170,7 +174,7 @@ export function Register() {
           />
 
           <ButtonContainer>
-            <Button title="Enviar" onPress={handleSubmit(handleRegister)} />
+            <Button title="Cadastrar" onPress={handleSubmit(handleRegister)} />
           </ButtonContainer>
         </Form>
 

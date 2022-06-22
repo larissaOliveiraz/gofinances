@@ -27,6 +27,7 @@ interface AuthContextData {
   user: User;
   signInWithGoogle(): Promise<void>;
   signOut(): Promise<void>;
+  loadingUser: boolean;
 }
 
 interface AuthorizationResponse {
@@ -116,7 +117,9 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     // value - valores que ficam disponíveis em toda a aplicação - "useAuth()"
-    <AuthContext.Provider value={{ user, signInWithGoogle, signOut }}>
+    <AuthContext.Provider
+      value={{ user, signInWithGoogle, signOut, loadingUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

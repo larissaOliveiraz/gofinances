@@ -52,7 +52,7 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [highData, setHighData] = useState<HighData>({} as HighData);
 
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const theme = useTheme();
 
   // PEGA A DATA DA ÚLTIMA TRANSAÇÃO
@@ -76,7 +76,7 @@ export function Dashboard() {
 
   // FAZ O CARREGAMENTO DE TODAS AS TRANSACÕES
   async function loadTransactions() {
-    const dataKey = "@gofinances:transactions";
+    const dataKey = `@gofinances:transactions_user:${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = response ? JSON.parse(response) : [];
 
@@ -143,7 +143,7 @@ export function Dashboard() {
         }),
         lastTransaction: lastTransactionEntry
           ? `Última entrada dia ${lastTransactionEntry}`
-          : "Você não tem entradas",
+          : "Não há nenhuma transação",
       },
       expences: {
         total: expencesTotal.toLocaleString("pt-BR", {
@@ -152,7 +152,7 @@ export function Dashboard() {
         }),
         lastTransaction: lastTransactionExpence
           ? `Última saída dia ${lastTransactionExpence}`
-          : "Você não tem saídas",
+          : "Não há nenhuma transação",
       },
       totalCount: {
         total: totalSumCount.toLocaleString("pt-BR", {
@@ -204,18 +204,16 @@ export function Dashboard() {
               <UserInfo>
                 <Photo
                   source={{
-                    uri: "https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/479-mk-9690-job583.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=f089d81f404c15a89c4da6de1bfb1506",
+                    uri: user.photo,
                   }}
                 />
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Larissa</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <GestureHandlerRootView>
-                <SignOutButton onPress={handleSignOut} />
-              </GestureHandlerRootView>
+              <SignOutButton onPress={handleSignOut} />
             </UserWrapper>
           </Header>
 
